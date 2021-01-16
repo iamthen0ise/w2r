@@ -1,4 +1,4 @@
-baseURL = "http://example.org/"
+baseURL = "https://w2r.now.sh/"
 languageCode = "en-us"
-title = "My New Hugo Site"
-theme = "ananke"
+title = "what to read?"
+theme = "hugonews"
