@@ -70,8 +70,9 @@ done
 
 DATE=$(date "+%Y-%m-%dT%H:%M:%S%z")
 FILENAME=$(echo "$TITLE.md" | tr " " "-" | tr '[:upper:]' '[:lower:]')
+mkdir -p content/items
 hugo new items/$FILENAME
-cat >content/items/$FILENAME <<EOF
+cat > content/items/$FILENAME <<EOF
 ---
 title: "$TITLE"
 date: $DATE
