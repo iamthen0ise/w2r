@@ -3,8 +3,8 @@
 DATE=$(date "+%Y-%m-%dT%H:%M:%S%z")
 TITLE=$(echo $1)
 FILENAME=$(echo "$TITLE.md" | tr " " "-" | tr '[:upper:]' '[:lower:]')
-hugo new items/$FILENAME
-cat > items/$FILENAME <<EOF
+hugo new content/items/$FILENAME
+cat > content/items/$FILENAME <<EOF
 ---
 title: "$TITLE"
 date: $DATE
