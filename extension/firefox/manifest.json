@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "w2r",
+  "version": "1.0.30",
+
+  "description": "Posts a new article to personal link blog",
+  "homepage_url": "https://github.com/iamthen0ise/w2r",
+  "icons": {
+    "48": "icons/w2r-48.png"
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "borderify@mozilla.org",
+      "strict_min_version": "45.0"
+    }
+  },
+
+  "permissions": ["activeTab", "tabs", "storage", "https://api.github.com/*"],
+
+  "options_ui": {
+    "page": "options.html"
+  },
+
+  "browser_action": {
+    "default_icon": "icons/w2r-48.png",
+    "default_title": "w2r?",
+    "default_popup": "popup/popup.html"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "w2r@iamthen0ise.github.io"
+    }
+  }
+}
