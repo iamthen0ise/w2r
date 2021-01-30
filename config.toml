@@ -1,4 +1,4 @@
 baseURL = "https://w2r.now.sh/"
 languageCode = "en-us"
 title = "what to read?"
-theme = "hugonews"
+theme = "hugonewsfix"
