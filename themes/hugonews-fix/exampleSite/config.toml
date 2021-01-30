@@ -1,9 +1,0 @@
-baseURL = "https://example.com/"
-languageCode = "en-us"
-title = "hugonews example site"
-theme = "hugonews"
-
-[taxonomies]
-    tag = "tags"
-    category = "categories"
-    site = "sites"
