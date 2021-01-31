@@ -5,16 +5,11 @@
   window.hasRun = true;
 
   let token = "";
-
-  function getToken() {
-    return browser.storage.sync.get("w2rDataNeed").then((result) => result);
-  }
+  browser.storage.sync.get("w2rDataNeed").then((tk) => {
+    token = tk["w2rDataNeed"];
+  });
 
   function showData(message) {
-    getToken().then((tk) => {
-      token = tk["w2rDataNeed"];
-    });
-
     const tags = message.tags || "unsorted";
     fetch("https://api.github.com/repos/iamthen0ise/w2r/dispatches", {
       method: "POST",
