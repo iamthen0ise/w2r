@@ -10,7 +10,6 @@
             {{ range .Params.tags }}
                 <a class="item__tag" href='/tags/{{- replace . " " "-" -}}'>{{- . -}}</a>
             {{- end }}
-            <a class="item__notes" href="{{ .Permalink }}">notes</a>
         </p>
     </li>
     {{ end }}
