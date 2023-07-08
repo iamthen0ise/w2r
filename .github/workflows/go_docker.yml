@@ -5,6 +5,9 @@ on:
     paths:
       - 'extension/tgbot/**'
     branches: [ master ]
+  pull_request:
+    types:
+      - closed
 
 jobs:
   docker:
