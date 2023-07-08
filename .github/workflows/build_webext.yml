@@ -25,8 +25,10 @@ jobs:
         with:
           node-version: 14
 
+
       - name: Build extension
         run: npx web-ext build -a dist -n w2r-ext.xpi
+
 
       - name: Sign extension
         run: npx web-ext sign --api-key=${{ secrets.WEB_EXT_API_KEY }} --api-secret=${{ secrets.WEB_EXT_API_SECRET }}
