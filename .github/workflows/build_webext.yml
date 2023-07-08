@@ -1,0 +1,66 @@
+name: Build, Sign, and Publish Web Extension
+
+on:
+  push:
+    paths:
+      - 'extension/fifefox/**'
+    branches: [ master ]
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  build_sign_publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/firefox
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Increase version in manifest.json
+        run: |
+          VERSION=$(node -p "require('./manifest.json').version")
+          MAJOR=$(echo $VERSION | cut -d '.' -f 1)
+          MINOR=$(echo $VERSION | cut -d '.' -f 2)
+          PATCH=$(echo $VERSION | cut -d '.' -f 3)
+          NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          sed -i "s/\"version\": \"$VERSION\"/\"version\": \"$NEW_VERSION\"/" manifest.json
+
+      - name: Build extension
+        run: npm run build
+
+      - name: Sign extension
+        run: npx web-ext sign --api-key=${{ secrets.WEB_EXT_API_KEY }} --api-secret=${{ secrets.WEB_EXT_API_SECRET }}
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload extension
+        id: upload_extension
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: path/to/signed-extension.zip
+          asset_name: your-extension-name.zip
+          asset_content_type: application/zip
