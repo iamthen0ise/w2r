@@ -32,6 +32,10 @@ type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
+type BotApiInt interface {
+	Send(c tgbotapi.Chattable) (tgbotapi.Message, error)
+}
+
 func main() {
 	// Retrieve the Telegram Bot Token from environment variable
 	botToken := os.Getenv("TELEGRAM_BOT_TOKEN")
@@ -223,7 +227,7 @@ func triggerWorkflowRun(client HTTPClient, apiToken string, workflowURL string, 
 }
 
 // sendMessage sends a message to the specified chat ID using the Telegram bot
-func sendMessage(bot *tgbotapi.BotAPI, chatID int64, message string) {
+func sendMessage(bot BotApiInt, chatID int64, message string) {
 	msg := tgbotapi.NewMessage(chatID, message)
 	_, err := bot.Send(msg)
 	if err != nil {
