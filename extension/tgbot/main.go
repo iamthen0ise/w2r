@@ -28,6 +28,10 @@ type URLInfo struct {
 	Hashtags string
 }
 
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 func main() {
 	// Retrieve the Telegram Bot Token from environment variable
 	botToken := os.Getenv("TELEGRAM_BOT_TOKEN")
@@ -107,7 +111,10 @@ func main() {
 			fmt.Printf("URL: %s, Title: %s, Hashtags: %v\n", urlInfo.URL, urlInfo.Title, urlInfo.Hashtags)
 
 			// Trigger GitHub Actions workflow
-			err = triggerWorkflowRun(apiToken, workflowURL, urlInfo)
+			client := &http.Client{
+				Timeout: time.Second * 10,
+			}
+			err = triggerWorkflowRun(client, apiToken, workflowURL, urlInfo)
 			if err != nil {
 				log.Printf("Error triggering workflow: %v\n", err)
 				// Send a message to the user indicating the error
@@ -145,7 +152,7 @@ func getTitleFromURL(url string) (string, error) {
 }
 
 // triggerWorkflowRun triggers a GitHub Actions workflow run with the provided payload
-func triggerWorkflowRun(apiToken string, workflowURL string, payload URLInfo) error {
+func triggerWorkflowRun(client HTTPClient, apiToken string, workflowURL string, payload URLInfo) error {
 	// Create the request payload
 	type RequestPayload struct {
 		EventType     string `json:"event_type"`
@@ -176,7 +183,6 @@ func triggerWorkflowRun(apiToken string, workflowURL string, payload URLInfo) er
 	}
 
 	// Create the HTTP request
-	client := &http.Client{Timeout: 10 * time.Second}
 	request, err := http.NewRequest(http.MethodPost, workflowURL, bytes.NewBuffer(jsonPayload))
 	if err != nil {
 		return err

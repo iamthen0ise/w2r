@@ -1,0 +1,49 @@
+# .github/workflows/go.yml
+
+name: Go
+
+on:
+  push:
+    paths:
+      - 'extension/tgbot/**'
+    branches: [ main ]
+  pull_request:
+    paths:
+      - 'extension/tgbot/**'
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Get dependencies
+      run: go mod download
+      working-directory: ./extension/tgbot
+
+    - name: Build
+      run: go build -v ./...
+      working-directory: ./extension/tgbot
+
+    - name: Test
+      run: go test -v ./...
+      working-directory: ./extension/tgbot
+
+    - name: Format
+      run: test -z $(gofmt -l .)
+      working-directory: ./extension/tgbot
+
+    - name: Lint
+      uses: golangci/golangci-lint-action@v2
+      with:
+        version: latest
+        working-directory: ./extension/tgbot
