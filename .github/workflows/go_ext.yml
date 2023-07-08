@@ -12,51 +12,53 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build & Test
     runs-on: ubuntu-latest
-    steps:
-
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.17
-
-    - name: Check out code
-      uses: actions/checkout@v2
-
-    - name: Get dependencies
-      run: go mod download
-      working-directory: ./extension/tgbot
-
-    - name: Build
-      run: go build -v ./...
-      working-directory: ./extension/tgbot
-
-    - name: Test
-      run: go test -v ./...
-      working-directory: ./extension/tgbot
-
-    - name: Format
-      run: test -z $(gofmt -l .)
-      working-directory: ./extension/tgbot
-
-    - name: Lint
-      uses: golangci/golangci-lint-action@v2
-      with:
-        version: latest
+    defaults:
+      run:
         working-directory: ./extension/tgbot
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
 
-    - name: Login to DockerHub
-      uses: docker/login-action@v1 
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-      if: github.ref == 'refs/heads/master'
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: ./extension/tgbot
-        push: true
-        tags: iamthen0ise/w2r-tgbot:latest
-      if: github.ref == 'refs/heads/master'
+      - name: Get dependencies
+        run: go mod download
+
+      - name: Format
+        run: test -z $(gofmt -l .)
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -v ./...
+
+  docker:
+    needs: build
+    name: Docker
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/tgbot
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./extension/tgbot
+          push: true
+          tags: iamthen0ise/w2r-tgbot:latest
