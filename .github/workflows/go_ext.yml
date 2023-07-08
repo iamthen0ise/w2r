@@ -15,6 +15,9 @@ jobs:
   checkout:
     name: Check out code
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/tgbot
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -23,6 +26,9 @@ jobs:
     needs: checkout
     name: Set up Go
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/tgbot
     steps:
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -33,53 +39,66 @@ jobs:
     needs: setup
     name: Get dependencies
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/tgbot
     steps:
       - name: Get dependencies
         run: go mod download
-        working-directory: ./extension/tgbot
 
   fmt:
     needs: deps
     name: Format
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/tgbot
     steps:
       - name: Format
         run: test -z $(gofmt -l .)
-        working-directory: ./extension/tgbot
 
   lint:
     needs: fmt
     name: Lint
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/tgbot
     steps:
       - name: Lint
         uses: golangci/golangci-lint-action@v2
         with:
           version: latest
-          working-directory: ./extension/tgbot
 
   build:
     needs: lint
     name: Build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/tgbot
     steps:
       - name: Build
         run: go build -v ./...
-        working-directory: ./extension/tgbot
 
   test:
     needs: build
     name: Test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/tgbot
     steps:
       - name: Test
         run: go test -v ./...
-        working-directory: ./extension/tgbot
 
   docker:
     needs: test
     name: Docker
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./extension/tgbot
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Set up Docker Buildx
