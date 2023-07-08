@@ -58,5 +58,5 @@ jobs:
       with:
         context: ./extension/tgbot
         push: true
-        tags: YOUR_DOCKERHUB_USERNAME/YOUR_IMAGE_NAME:latest
+        tags: iamthen0ise/w2r-tgbot:latest
       if: github.ref == 'refs/heads/master'
