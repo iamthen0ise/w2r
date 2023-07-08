@@ -157,12 +157,16 @@ func triggerWorkflowRun(apiToken string, workflowURL string, payload URLInfo) er
 	}
 
 	requestPayload := RequestPayload{
-		EventType: "webhook",
+		EventType: "my_event",
 		ClientPayload: struct {
-			URL   string "json:\"url\""
-			Title string "json:\"title\""
-			Tags  string "json:\"tags\""
-		}{},
+			URL   string `json:"url"`
+			Title string `json:"title"`
+			Tags  string `json:"tags"`
+		}{
+			URL:   payload.URL,
+			Title: payload.Title,
+			Tags:  payload.Hashtags,
+		},
 	}
 
 	// Convert the payload to JSON
@@ -197,7 +201,6 @@ func triggerWorkflowRun(apiToken string, workflowURL string, payload URLInfo) er
 
 	// Log the response information
 	log.Printf("GitHub Response Status: %s", response.Status)
-	log.Printf("GitHub Response Headers: %v", response.Header)
 	// Read the response body
 	responseBody, err := ioutil.ReadAll(response.Body)
 	if err != nil {
@@ -223,6 +226,9 @@ func sendMessage(bot *tgbotapi.BotAPI, chatID int64, message string) {
 }
 
 func concatenateHashtags(hashtags []string) string {
+	for i, tag := range hashtags {
+		hashtags[i] = strings.TrimPrefix(tag, "#")
+	}
 	if len(hashtags) > 0 {
 		return strings.Join(hashtags, ",")
 	}
