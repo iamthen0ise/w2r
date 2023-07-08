@@ -25,10 +25,8 @@ jobs:
         with:
           node-version: 14
 
-
       - name: Build extension
-        run: npx web-ext build -a . -n w2r-ext.xpi
-
+        run: npx web-ext build -a dist -n w2r-ext.xpi
 
       - name: Sign extension
         run: npx web-ext sign --api-key=${{ secrets.WEB_EXT_API_KEY }} --api-secret=${{ secrets.WEB_EXT_API_SECRET }}
@@ -51,6 +49,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: w2r-ext.xpi
+          asset_path: dist/w2r-ext.xpi
           asset_name: w2r-ext.xpi
           asset_content_type: application/zip
