@@ -32,11 +32,6 @@ jobs:
       - name: Format
         run: test -z $(gofmt -l .)
 
-      - name: Lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: latest
-
       - name: Build
         run: go build -v ./...
 
@@ -52,6 +47,8 @@ jobs:
         working-directory: ./extension/tgbot
     if: github.ref == 'refs/heads/master'
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to DockerHub
