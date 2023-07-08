@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "w2r",
-  "version": "1.0.32",
+  "version": "1.0.34.1",
 
   "description": "Posts a new article to personal link blog",
   "homepage_url": "https://github.com/iamthen0ise/w2r",
