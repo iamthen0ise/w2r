@@ -24,10 +24,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14
-
-      - name: Install dependencies
-        run: npm install
-
       - name: Increase version in manifest.json
         run: |
           VERSION=$(node -p "require('./manifest.json').version")
@@ -36,9 +32,6 @@ jobs:
           PATCH=$(echo $VERSION | cut -d '.' -f 3)
           NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
           sed -i "s/\"version\": \"$VERSION\"/\"version\": \"$NEW_VERSION\"/" manifest.json
-
-      - name: Build extension
-        run: npm run build
 
       - name: Sign extension
         run: npx web-ext sign --api-key=${{ secrets.WEB_EXT_API_KEY }} --api-secret=${{ secrets.WEB_EXT_API_SECRET }}
