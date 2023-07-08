@@ -13,8 +13,8 @@ jobs:
   build_sign_publish:
     runs-on: ubuntu-latest
       defaults:
-      run:
-        working-directory: ./extension/firefox
+        run:
+          working-directory: ./extension/firefox
 
     steps:
       - name: Checkout code
