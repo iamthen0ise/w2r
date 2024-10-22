@@ -21,9 +21,9 @@ jobs:
         uses: EndBug/add-and-commit@v7.3.0
         with:
           add: 'content/items'
-          author_name: iamthen0ise
-          author_email: thefiltdj@gmail.com
-          committer_name: iamthen0ise
-          commiter_email: thefiltdj@gmail.com
+          author_name: snegovik-bot
+          author_email: snegovik@tg.me
+          committer_name: snegovik-bot
+          commiter_email: snegovik@tg.me
           message: 'Add ${{ github.event.client_payload.title }}'
           
