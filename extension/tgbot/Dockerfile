@@ -10,7 +10,7 @@ RUN go mod download
 
 COPY main.go .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=5 go build -ldflags "-s -w" -a -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -a -o main .
 RUN chmod +x main
 
 FROM scratch
