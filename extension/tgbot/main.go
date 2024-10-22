@@ -168,7 +168,7 @@ func triggerWorkflowRun(client HTTPClient, apiToken string, workflowURL string, 
 	}
 
 	requestPayload := RequestPayload{
-		EventType: "my_event",
+		EventType: "webhook",
 		ClientPayload: struct {
 			URL   string `json:"url"`
 			Title string `json:"title"`
