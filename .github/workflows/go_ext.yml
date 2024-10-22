@@ -32,12 +32,13 @@ jobs:
       - name: Format
         run: test -z $(gofmt -l .)
 
+      - name: Build
+        run: go build -v ./...
+
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
-          context: ./extension/tgbot
+          context: .
           push: true
           tags: iamthen0ise/w2r-tgbot:latest
         if: github.ref == 'refs/heads/master'
-        - name: Build
-          run: go build -v ./...
